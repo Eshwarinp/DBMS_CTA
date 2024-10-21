@@ -1,82 +1,127 @@
 #include <stdio.h>
-#define MAX_NUMBERS 10
 
-int main()
-{
-int numbers[MAX_NUMBERS];
-int count = 0;
-int choice;
+#define arrSIZE 10  // Defining a constant size for the array
 
-do {
-printf("\nMenu:\n");
-printf("1. Add Number\n");
-printf("2. Search Number\n");
-printf("3. Display All Numbers\n");
-printf("4. Exit\n");
-printf("Enter your choice: ");
-scanf("%d", &choice);
+// Function to display the array
 
-switch (choice) {
-
-case 1: // Add Number
-
-if (count < MAX_NUMBERS) 
-{
-printf("Enter a number: ");
-scanf("%d", &numbers[count]);
-count++;
-printf("Number added.\n");
-} 
-
-else 
-{
-printf("Number limit reached.\n");
-}
-break;
-
-case 2: // Search Number
-
-{
-int searchNum, found = 0;
-printf("Enter number to search: ");
-scanf("%d", &searchNum);
-
-for (int i = 0; i < count; i++) 
-{
-if (numbers[i] == searchNum) 
-{
-printf("Number %d found at index %d.\n", searchNum, i);
-found = 1;
-break;
-}
+void display(int arr[], int size) {
+    printf("Array elements: ");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
 }
 
-if (!found) {
-printf("Number not found.\n");
+// Function to insert a value at a specific index
+
+void insert(int arr[], int *size, int index, int value) {
+    if (index > *size || index < 0) {
+        printf("Invalid index!\n");
+        return;
+    }
+    for (int i = *size; i > index; i--) {
+        arr[i] = arr[i - 1];
+    }
+    arr[index] = value;
+    (*size)++;
+    printf("Inserted %d at index %d\n", value, index);
 }
 
+// Function to delete a value from a specific index
+
+void delete(int arr[], int *size, int index) {
+    if (index >= *size || index < 0) {
+        printf("Invalid index!\n");
+        return;
+    }
+    printf("Deleted %d from index %d\n", arr[index], index);
+    for (int i = index; i < *size - 1; i++) {
+        arr[i] = arr[i + 1];
+    }
+    (*size)--;
 }
-break;
 
-case 3: // Display All Numbers
-
-printf("All Numbers:\n");
-for (int i = 0; i < count; i++) 
-{
-printf("%d ", numbers[i]);
+// Function to search for a value using its index
+int searchByIndex(int arr[], int size, int index) {
+    if (index >= size || index < 0) {
+        printf("Invalid index!\n");
+        return -1;
+    }
+    return arr[index];
 }
-printf("\n");
 
-break;
+int main() {
+    int arr[arrSIZE], size, choice, index, value;
 
-case 4: // Exit
-printf("Exiting...\n");
-break;
-default:
-printf("Invalid choice. Please try again.\n");
-} //end of switch
+    // Taking input for the initial size of the array
+    printf("Enter the initial size of the array (max %d): ", arrSIZE);
+    scanf("%d", &size);
 
-} 
-while (choice != 4);
-return 0;
+    if (size > arrSIZE) {
+        printf("Size exceeds the maximum limit!\n");
+        return 1;
+    }
+
+    // Taking input for the array elements
+    printf("Enter %d elements:\n", size);
+    for (int i = 0; i < size; i++) {
+        printf("Element %d: ", i + 1);
+        scanf("%d", &arr[i]);
+    }
+
+    // Display initial array
+    printf("Initial array:\n");
+    display(arr, size);
+
+    // Menu-driven program for performing operations
+    do {
+        printf("\nMenu:\n");
+        printf("1. Insert an element\n");
+        printf("2. Delete an element\n");
+        printf("3. Search by index\n");
+        printf("4. Display array\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: // Insert an element
+                printf("Enter the index to insert (0 to %d): ", size);
+                scanf("%d", &index);
+                printf("Enter the value to insert: ");
+                scanf("%d", &value);
+                insert(arr, &size, index, value);
+                display(arr, size);
+                break;
+            
+            case 2: // Delete an element
+                printf("Enter the index to delete (0 to %d): ", size - 1);
+                scanf("%d", &index);
+                delete(arr, &size, index);
+                display(arr, size);
+                break;
+            
+            case 3: // Search by index
+                printf("Enter the index to search (0 to %d): ", size - 1);
+                scanf("%d", &index);
+                value = searchByIndex(arr, size, index);
+                if (value != -1) {
+                    printf("Value at index %d: %d\n", index, value);
+                }
+                break;
+            
+            case 4: // Display the array
+                display(arr, size);
+                break;
+            
+            case 5: // Exit
+                printf("Exiting the program.\n");
+                break;
+            
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    } while (choice != 5);
+
+    return 0;
 }
