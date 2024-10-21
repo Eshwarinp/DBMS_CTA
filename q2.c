@@ -25,7 +25,7 @@ void insert(int arr[], int *size, int index, int value) {
     arr[index] = value;
     (*size)++;
     printf("Inserted %d at index %d\n", value, index);
-}g
+}
 
 // Function to delete a value from a specific index
 
